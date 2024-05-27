@@ -16,6 +16,11 @@ env/
 # Ignore compiled Python files
 *.pyc
 
+#ignore env files
+.env
+*.env
+
+
 # Ignore local settings
 local_settings.py
 
