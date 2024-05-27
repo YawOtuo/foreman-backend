@@ -6,6 +6,8 @@ from drf_yasg import openapi
 from django.conf.urls.static import static
 from django.conf import settings
 
+from foreman_backend import views
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Your API Title",
@@ -22,6 +24,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("core.urls.urls")),
+    path("", views.home),
     re_path(
         r"^swagger/$",
         schema_view.with_ui("swagger", cache_timeout=0),
@@ -30,5 +33,4 @@ urlpatterns = [
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
 ]
 
-urlpatterns += static(settings.MEDIA_URL,
-                              document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
