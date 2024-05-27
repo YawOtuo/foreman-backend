@@ -1,0 +1,38 @@
+# Ignore virtual environment
+venv/
+env/
+
+# Ignore IDE specific files
+.vscode/
+.idea/
+
+# Ignore database files
+*.sqlite3
+
+# Ignore staticfiles
+/staticfiles/
+
+# Ignore compiled Python files
+*.pyc
+
+# Ignore local settings
+local_settings.py
+
+# Ignore migration files
+/migrations/
+
+# Ignore secret keys and sensitive information
+*.secret
+*.key
+*.pem
+
+# Ignore log files
+*.log
+
+# Ignore cache and temporary files
+__pycache__/
+*.swp
+*.swo
+
+# Ignore user uploaded files
+/media/
