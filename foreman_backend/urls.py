@@ -23,7 +23,9 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", include("core.urls.urls")),
+    path("api/products/", include("core.urls.products")),
+    path("api/users/", include("core.urls.users")),
+    path("api/cart/", include("core.urls.cart")),
     path("", views.home),
     re_path(
         r"^swagger/$",
