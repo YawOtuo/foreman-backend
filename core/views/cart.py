@@ -39,7 +39,7 @@ class CartAPI(APIView):
 
 
 
-class CartAPIDeleteView:
+class CartAPIDeleteView(APIView):
     def delete(self, request, product_id):
         cart_id = request.session.get("cart_id")
         if cart_id:
