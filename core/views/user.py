@@ -2,8 +2,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from core.models import User
-from core.serializers import UserSerializer
+from core.serializers.user import UserSerializer
 from django.http import Http404
+from drf_yasg.utils import swagger_auto_schema
 
 class UserList(APIView):
     def get(self, request):
@@ -11,6 +12,7 @@ class UserList(APIView):
         serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
 
+    @swagger_auto_schema(request_body=UserSerializer)
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
@@ -30,6 +32,7 @@ class UserDetail(APIView):
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
+    @swagger_auto_schema(request_body=UserSerializer)
     def put(self, request, pk):
         user = self.get_object(pk)
         serializer = UserSerializer(user, data=request.data)
