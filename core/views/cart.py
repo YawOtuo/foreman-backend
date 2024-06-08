@@ -17,8 +17,6 @@ from core.serializers.product import ProductSerializer
 # from drf_yasg import openapi
 
 
-
-
 class CartAPI(APIView):
     # get a cart
     def get(self, request, cart_id):
@@ -32,9 +30,13 @@ class CartAPI(APIView):
                 cart_serializer = CartSerializer(cart)
                 cart_item_serializer = CartItemSerializer(cart_items, many=True)
 
-                data = {"cart": cart_serializer.data, "cart_items": cart_item_serializer.data}
+                data = [
+                    {"cart": cart_serializer.data},
+                    {"cart_items": cart_item_serializer.data},
+                ]
+
                 return Response(data)
-        
+
         return Response({"message": "Cart not found"}, status=status.HTTP_404_NOT_FOUND)
 
     # add to cart
@@ -69,6 +71,7 @@ class CartAPI(APIView):
             return Response({"message": message}, status=status.HTTP_200_OK)
         else:
             return Response({"message": message}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class CartAPIDeleteView(APIView):
     # remove item from cart

@@ -44,6 +44,6 @@ class User(models.Model):
         
         # If the product is not already in the cart, increase its quantity by 1
         if not created:
-            return None, "Item already in cart"
+            return cart_item, "Item already in cart"
         
         return cart_item, "Item added to cart"
