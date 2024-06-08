@@ -8,7 +8,7 @@ from rest_framework import serializers
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'category', 'price', 'availability', 'status']
+        fields = ['id', 'name', 'description', 'category', 'price', 'availability', 'status']
         # Specify required fields for POST request
         extra_kwargs = {
             'name': {'required': True},
