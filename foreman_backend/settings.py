@@ -15,6 +15,7 @@ from pathlib import Path
 import os
 import dj_database_url
 from dotenv import load_dotenv
+
 load_dotenv()
 
 
@@ -31,7 +32,12 @@ SECRET_KEY = "django-insecure-$wsr0es*nh2(7_fq*hdq@w8_$l(^$45^55)r*_x#&pl$pkug_*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["foreman-backend-bb5c83b1ef78.herokuapp.com", "0.0.0.0", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = [
+    "foreman-backend-bb5c83b1ef78.herokuapp.com",
+    "0.0.0.0",
+    "127.0.0.1",
+    "localhost",
+]
 
 
 # Application definition
@@ -46,6 +52,7 @@ INSTALLED_APPS = [
     "core",
     "rest_framework",
     "drf_yasg",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -56,6 +63,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "foreman_backend.urls"
@@ -81,9 +89,7 @@ WSGI_APPLICATION = "foreman_backend.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600)
-}
+DATABASES = {"default": dj_database_url.config(conn_max_age=600)}
 
 
 # Password validation
@@ -104,6 +110,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:3002",
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
