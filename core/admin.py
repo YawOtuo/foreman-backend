@@ -1,7 +1,15 @@
+# admin.py
+
 from django.contrib import admin
 
 from core.models.product import Product
+from core.models.productimage import ProductImage
 
+class ProductImageInline(admin.TabularInline):
+    model = ProductImage
+    extra = 1
 
-# Register your models here.
-admin.site.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    inlines = [ProductImageInline]
+
+admin.site.register(Product, ProductAdmin)
