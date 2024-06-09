@@ -2,7 +2,7 @@ from django.db import models
 
 from core.models.cart import Cart
 from core.models.cartitem import CartItem
-from core.models.favourite import Favorite
+from core.models.favourite import Favourite
 from core.models.product import Product
 
 
@@ -17,11 +17,11 @@ class User(models.Model):
         return self.username
     
     
-    def add_to_favorites(self, product):
-        Favorite.objects.get_or_create(user=self, product=product)
+    # def add_to_favorites(self, product):
+    #     Favourite.objects.get_or_create(user=self, product=product)
 
-    def remove_from_favorites(self, product):
-        Favorite.objects.filter(user=self, product=product).delete()
+    # def remove_from_favorites(self, product):
+    #     Favourite.objects.filter(user=self, product=product).delete()
 
     def favorites(self):
         return Product.objects.filter(favorite__user=self)

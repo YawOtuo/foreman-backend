@@ -5,12 +5,19 @@ from core.models.product import Product
 from django.http import Http404
 from drf_yasg.utils import swagger_auto_schema
 
+
 from core.serializers.product import ProductSerializer
 
 
 class ProductList(APIView):
     def get(self, request):
-        products = Product.objects.all()
+        search_params = {}
+        for field in ['name', 'description', 'category', 'price', 'availability', 'status']:
+            value = request.query_params.get(field)
+            if value:
+                search_params[field] = value
+                
+        products = Product.objects.search(**search_params)
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
