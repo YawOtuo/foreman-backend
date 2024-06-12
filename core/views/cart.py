@@ -33,6 +33,10 @@ class CartAPI(APIView):
                 data = [
                     {"cart": cart_serializer.data},
                     {"cart_items": cart_item_serializer.data},
+                    {
+                        "total_items": cart.get_total_items(),
+                        "total_price": cart.get_total_price(),
+                    },
                 ]
 
                 return Response(data)
