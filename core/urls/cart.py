@@ -9,7 +9,7 @@ urlpatterns = [
     path(
         "<int:cart_id>/products/<int:product_id>",
         CartAPIIncrementDecrementDeleteView.as_view(),
-        name="cart_api",
+        name="cart_increment_decrement",
     ),
 
 ]
