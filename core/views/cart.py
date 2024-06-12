@@ -77,7 +77,45 @@ class CartAPI(APIView):
             return Response({"message": message}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CartAPIDeleteView(APIView):
+
+   
+class CartAPIIncrementDecrementDeleteView(APIView):
+     # increment item quantity
+    @swagger_auto_schema(
+        responses={
+            200: "OK",
+            404: "Not Found",
+        }
+    )
+    def put(self, request, cart_id, product_id):
+        cart = get_object_or_404(Cart, id=cart_id)
+        product = get_object_or_404(Product, id=product_id)
+        cart_item = get_object_or_404(CartItem, cart=cart, product=product)
+
+        cart_item.increment_quantity()
+        return Response(
+            {"message": "Item quantity incremented"}, status=status.HTTP_200_OK
+        )
+
+    # decrement item quantity
+    @swagger_auto_schema(
+        responses={
+            200: "OK",
+            404: "Not Found",
+        }
+    )
+    def patch(self, request, cart_id, product_id):
+        cart = get_object_or_404(Cart, id=cart_id)
+        product = get_object_or_404(Product, id=product_id)
+        cart_item = get_object_or_404(CartItem, cart=cart, product=product)
+
+        cart_item.decrement_quantity()
+        return Response(
+            {"message": "Item quantity decremented"}, status=status.HTTP_200_OK
+        )
+
+
+    
     # remove item from cart
     def delete(self, request, cart_id, product_id):
         cart = get_object_or_404(Cart, id=cart_id)

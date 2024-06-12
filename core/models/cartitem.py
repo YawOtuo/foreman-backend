@@ -13,3 +13,14 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} of {self.product.name}"
+
+    def increment_quantity(self):
+        self.quantity += 1
+        self.save()
+
+    def decrement_quantity(self):
+        if self.quantity > 1:
+            self.quantity -= 1
+            self.save()
+        else:
+            self.delete()
