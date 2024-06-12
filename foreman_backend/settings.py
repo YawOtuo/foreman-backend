@@ -117,6 +117,17 @@ CORS_ALLOWED_ORIGINS = [
     "https://foreman-staging.vercel.app"
 ]
 
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+]
+
+
 CLOUDINARY = {
     'cloud_name': os.getenv('CLOUDINARY_CLOUD_NAME'),
     'api_key': os.getenv('CLOUDINARY_API_KEY'),
