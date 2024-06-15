@@ -12,7 +12,7 @@ from core.serializers.product import ProductSerializer
 class ProductList(APIView):
     def get(self, request):
         search_params = {}
-        for field in ['name', 'description', 'category', 'price', 'availability', 'status']:
+        for field in ['name', 'description', 'category__name', 'price', 'availability', 'status']:
             value = request.query_params.get(field)
             if value:
                 search_params[field] = value

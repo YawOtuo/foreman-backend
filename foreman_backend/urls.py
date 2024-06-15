@@ -27,6 +27,8 @@ urlpatterns = [
     path("api/users/", include("core.urls.users")),
     path("api/carts/", include("core.urls.cart")),
     path("api/favourites/", include("core.urls.favourites")),
+    path("api/categories/", include("core.urls.categories")),
+
     path("", views.home),
     re_path(
         r"^swagger/$",

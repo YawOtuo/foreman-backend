@@ -15,6 +15,8 @@ from pathlib import Path
 import os
 import dj_database_url
 from dotenv import load_dotenv
+from os import getenv
+
 
 load_dotenv()
 
@@ -39,6 +41,19 @@ ALLOWED_HOSTS = [
     "localhost",
 ]
 
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": getenv("PGDATABASE"),
+        "USER": getenv("PGUSER"),
+        "PASSWORD": getenv("PGPASSWORD"),
+        "HOST": getenv("PGHOST"),
+        "PORT": getenv("PGPORT", 5432),
+        "OPTIONS": {
+            "sslmode": "require",
+        },
+    }
+}
 
 # Application definition
 
@@ -89,7 +104,6 @@ WSGI_APPLICATION = "foreman_backend.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-DATABASES = {"default": dj_database_url.config(conn_max_age=600)}
 
 
 # Password validation

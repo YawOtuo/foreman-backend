@@ -8,7 +8,7 @@ class ProductManager(models.Manager):
         queryset = self.get_queryset()
         if kwargs:
             query_objects = Q()
-            for field in ['name', 'description', 'category', 'price', 'availability', 'status']:
+            for field in ['name', 'description', 'category__name', 'price', 'availability', 'status']:
                 value = kwargs.get(field)
                 if value:
                     query_objects |= Q(**{f"{field}__icontains": value})
