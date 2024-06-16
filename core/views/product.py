@@ -17,6 +17,10 @@ class ProductList(APIView):
             if value:
                 search_params[field] = value
                 
+        ordering = request.query_params.get('ordering')
+        if ordering:
+            search_params['ordering'] = ordering
+            
         products = Product.objects.search(**search_params)
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
