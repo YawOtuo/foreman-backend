@@ -3,13 +3,19 @@ from django.db.models import Q
 
 from core.models.category import Category
 
-
 class ProductManager(models.Manager):
     def search(self, **kwargs):
         queryset = self.get_queryset()
+        search_query = kwargs.pop('search', None)
         query_objects = Q()
+
+        # Apply initial search_query filter for name or category__name
+        if search_query:
+            query_objects = Q(name__icontains=search_query) | Q(category__name__icontains=search_query)
+
         ordering_fields = None
 
+        # Process remaining filters in kwargs
         for field, value in kwargs.items():
             if value:
                 if field == "ordering":
@@ -46,7 +52,7 @@ class Product(models.Model):
     length = models.CharField(max_length=100, blank=True, null=True)
 
     min_order_quantity = models.IntegerField(blank=True, null=True)
-    
+
     min_order_value = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
     )

@@ -1,0 +1,5 @@
+search by name and category
+
+-------name error, ascending descending
+
+getUserByUid
