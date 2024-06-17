@@ -12,12 +12,11 @@ from core.serializers.unit_of_measurement import UnitOfMeasurementSerializer
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     category = CategorySerializer()
-    units_of_measurement = UnitOfMeasurementSerializer(many=True)
 
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'category', 'price', 'availability', 'status', 'images', "units_of_measurement"]
+        fields = ['id', 'name', 'description', 'category', 'price', 'availability', 'status', 'images']
         # Specify required fields for POST request
         extra_kwargs = {
             'name': {'required': True},

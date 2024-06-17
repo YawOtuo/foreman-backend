@@ -38,8 +38,19 @@ class Product(models.Model):
     )
     # location = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
+
     availability = models.CharField(max_length=50, blank=True)
-    # size = models.CharField(max_length=100)
+
+    size = models.CharField(max_length=100, blank=True, null=True)
+
+    length = models.CharField(max_length=100, blank=True, null=True)
+
+    min_order_quantity = models.IntegerField(blank=True, null=True)
+    
+    min_order_value = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True
+    )
+
     # features = models.TextField()
     # completion_date = models.DateField()
     # contractor = models.CharField(max_length=255)
