@@ -14,7 +14,7 @@ class ProductManager(models.Manager):
             if value:
                 if field == "ordering":
                     ordering_fields = value.split(",")
-                elif field == "category" and value.lower() == "all":
+                elif field == "category__name" and value.lower() == "all":
                     # Skip adding category filter if "All" is selected
                     continue
                 else:
