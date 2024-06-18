@@ -39,7 +39,7 @@ class Cart(models.Model):
         return format(total_price, ".2f")
 
 
-# @receiver(post_save, sender='core.User')
-# def create_cart_for_new_user(sender, instance, created, **kwargs):
-#     if created:  # Check if a new user instance has been created
-#         Cart.objects.create(user=instance)
+@receiver(post_save, sender='core.User')
+def create_cart_for_new_user(sender, instance, created, **kwargs):
+    if created:  # Check if a new user instance has been created
+        Cart.objects.create(user=instance)
