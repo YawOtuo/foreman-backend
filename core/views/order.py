@@ -68,12 +68,12 @@ class OrderListAPI(APIView):
                                 type=openapi.TYPE_INTEGER,
                                 description="Quantity of the product",
                             ),
-                            "total_item_cost": openapi.Schema(
+                            "totalCost": openapi.Schema(
                                 type=openapi.TYPE_NUMBER,
                                 description="Total cost of this item",
                             ),
                         },
-                        required=["product_id", "quantity", "total_item_cost"],
+                        required=["product_id", "quantity", "totalCost"],
                     ),
                 ),
             },
@@ -84,7 +84,6 @@ class OrderListAPI(APIView):
             400: "Bad Request",
         },
     )
-    
     def post(self, request, user_id):
         """
         Create a new order for the specified user.
@@ -95,7 +94,10 @@ class OrderListAPI(APIView):
         order_items_data = data.get("order_items")
 
         if not total_order_cost or not total_order_quantity or not order_items_data:
-            return Response({"message": "Incomplete order data provided"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": "Incomplete order data provided"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         user = get_object_or_404(User, id=user_id)
 
@@ -109,30 +111,34 @@ class OrderListAPI(APIView):
                 break
 
         if not products_exist:
-            return Response({"message": "One or more products do not exist"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"message": "One or more products do not exist"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         # Create the order
-        order = Order.objects.create(user=user, total_cost=total_order_cost, total_quantity=total_order_quantity)
+        order = Order.objects.create(
+            user=user, total_cost=total_order_cost, total_quantity=total_order_quantity
+        )
 
         order_items = []
         for item_data in order_items_data:
             product_id = item_data.get("product_id")
             quantity = item_data.get("quantity")
-            total_item_cost = item_data.get("total_item_cost")
+            totalCost = item_data.get("totalCost")
 
             # Create OrderItem and link to order
             order_item = OrderItem.objects.create(
                 order=order,
                 product_id=product_id,
                 quantity=quantity,
-                total_cost=total_item_cost
+                total_cost=totalCost,
             )
             order_items.append(order_item)
 
         # Serialize the order and return the response
         serializer = OrderSerializer(order)
-        return Response({"message": "Order created successfully"}, status=status.HTTP_201_CREATED)
-
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class OrderDetailAPI(APIView):
@@ -183,7 +189,10 @@ class OrderDetailAPI(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "Order updated successfully"}, status=status.HTTP_201_CREATED)
+            return Response(
+                {"message": "Order updated successfully"},
+                status=status.HTTP_201_CREATED,
+            )
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
