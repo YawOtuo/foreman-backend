@@ -20,7 +20,7 @@ class ProductVariantInline(admin.StackedInline):
     # inlines = [ProductImageInline]  # Include ProductImageInline within ProductVariantInline
 
 class ProductAdmin(admin.ModelAdmin):
-    inlines = [ProductImageInline, ProductVariantInline]
+    inlines = [ProductVariantInline]
 
 class ProductVariantAdmin(admin.ModelAdmin):
     inlines = [ProductImageInline]

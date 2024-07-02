@@ -1,30 +1,29 @@
 from rest_framework import serializers
+from core.models.product import Product
+from core.serializers.category import CategorySerializer
+from .productimage import ProductImageSerializer  # Adjust import as per your project structure
+from rest_framework import serializers
 from core.models.productvariant import ProductVariant
-from core.models.product import Product  # Assuming this is your Product model
-from .productimage import (
-    ProductImageSerializer,
-)  # Adjust import as per your project structure
-
-
+from .productimage import ProductImageSerializer  # Adjust import as per your project structure
 class RelatedProductSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
+    images = serializers.SerializerMethodField()
+    category = CategorySerializer()
+
 
     class Meta:
         model = Product
-        fields = ["id", "name", "image"]
+        fields = ["id", "name", "images", 'category', 'description', 'availability']
 
-    def get_image(self, obj):
-        # Assuming Product has a related image through ProductImage model
-        if obj.images.exists():
-            return (
-                obj.images.first().image.url
-            )  # Adjust as per your ProductImage model structure
-        return None
-
+    def get_images(self, obj):
+        # Fetch all images associated with the related product
+        if obj.get_all_images():
+            return ProductImageSerializer(obj.get_all_images(), many=True).data
+        return []
+    
 
 class ProductVariantSerializer(serializers.ModelSerializer):
     related_products = RelatedProductSerializer(many=True, read_only=True)
-    images = ProductImageSerializer(many=True, read_only=True)  # Add images field
+    images = ProductImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = ProductVariant

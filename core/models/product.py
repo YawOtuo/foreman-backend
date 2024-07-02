@@ -68,3 +68,9 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_all_images(self):
+        all_images = []
+        for variant in self.variants.all():
+            all_images.extend(variant.images.all())
+        return all_images
