@@ -1,28 +1,19 @@
-
 from core.models.product import Product
-from core.models.user import User
 from rest_framework import serializers
 
-from core.serializers.category import CategorySerializer
-from core.serializers.productimage import ProductImageSerializer
-from core.serializers.unit_of_measurement import UnitOfMeasurementSerializer
-
-
+from core.serializers.productvariant import ProductVariantSerializer
+from .productimage import ProductImageSerializer
+from .category import CategorySerializer
 
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     category = CategorySerializer()
-
+    variants = ProductVariantSerializer(many=True, read_only=True)  # Add this line for ProductVariant
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'category', 'price', 'availability', 'status', 'images']
-        # Specify required fields for POST request
+        fields = ['id', 'name', 'description', 'category', 'availability', 'images', 'variants']
         extra_kwargs = {
             'name': {'required': True},
-            # 'description': {'required': True},
-            # 'category': {'required': True},
-            # 'price': {'required': True},
-            # 'availability': {'required': True},
-            # 'status': {'required': True},
+            # Add other required fields if needed
         }

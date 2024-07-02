@@ -4,3 +4,5 @@ from .product import Product
 from .user import User
 from .favourite import Favourite
 from .category import Category
+from .productvariant import ProductVariant
+from .productimage import ProductImage

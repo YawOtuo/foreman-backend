@@ -49,30 +49,18 @@ class Product(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="products"
     )
-    # location = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
-
     availability = models.CharField(
         max_length=50, 
         choices=AVAILABILITY_CHOICES, 
         default="available",
         blank=True
     )
-    size = models.CharField(max_length=100, blank=True, null=True)
-
-    length = models.CharField(max_length=100, blank=True, null=True)
 
     min_order_quantity = models.IntegerField(blank=True, null=True)
 
     min_order_value = models.DecimalField(
         max_digits=10, decimal_places=2, blank=True, null=True
     )
-
-    # features = models.TextField()
-    # completion_date = models.DateField()
-    # contractor = models.CharField(max_length=255)
-    # client = models.CharField(max_length=255)
-    status = models.CharField(max_length=50, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
