@@ -9,7 +9,6 @@ class RelatedProductSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     category = CategorySerializer()
 
-
     class Meta:
         model = Product
         fields = ["id", "name", "images", 'category', 'description', 'availability']

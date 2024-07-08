@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 
 import os
-import dj_database_url
 from dotenv import load_dotenv
 from os import getenv
 
@@ -68,6 +67,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_yasg",
     "corsheaders",
+    "cloudinary"
 ]
 
 MIDDLEWARE = [
@@ -128,7 +128,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:3001",
     "http://localhost:3002",
-    "https://foreman-staging.vercel.app"
+    "https://foreman-staging.vercel.app",
 ]
 
 
@@ -143,9 +143,10 @@ CORS_ALLOW_METHODS = [
 
 
 CLOUDINARY = {
-    'cloud_name': os.getenv('CLOUDINARY_CLOUD_NAME'),
-    'api_key': os.getenv('CLOUDINARY_API_KEY'),
-    'api_secret': os.getenv('CLOUDINARY_API_SECRET')
+    "cloud_name": os.getenv("CLOUDINARY_CLOUD_NAME"),
+    "api_key": os.getenv("CLOUDINARY_API_KEY"),
+    "api_secret": os.getenv("CLOUDINARY_API_SECRET"),
+    # "upload_preset": "foreman",  # Specify your upload preset here
 }
 
 # Internationalization
@@ -168,7 +169,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 # \STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, 'static'),
 # )
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
