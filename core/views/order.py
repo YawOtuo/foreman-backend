@@ -38,7 +38,7 @@ class OrderListAPI(APIView):
 
         if not orders.exists():
             return Response(
-                {"message": "Orders not found"}, status=status.HTTP_404_NOT_FOUND
+                [], status=status.HTTP_200_OK
             )
 
         serializer = OrderSerializer(orders, many=True)

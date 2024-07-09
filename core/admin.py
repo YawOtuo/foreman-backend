@@ -1,5 +1,6 @@
 from django.contrib import admin
 from core.models.category import Category
+from core.models.order import Order, OrderItem
 from core.models.product import Product
 from core.models.productimage import ProductImage
 from core.models.productvariant import ProductVariant
@@ -27,3 +28,7 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductVariant, ProductVariantAdmin)
 admin.site.register(Category)
 admin.site.register(UnitOfMeasurement)
+admin.site.register(Order)
+admin.site.register(OrderItem)
+
+
