@@ -11,7 +11,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'category', 'availability', 'variants']
+        fields = ['id', 'name', 'description','price', 'category', 'availability', 'variants']
         extra_kwargs = {
             'name': {'required': True},
             # Add other required fields if needed
@@ -22,6 +22,7 @@ class ProductSerializer(serializers.ModelSerializer):
         
         # Fetch all images associated with variants and add to representation
         all_images = instance.get_all_images()
+    
         image_data = ProductImageSerializer(all_images, many=True).data
         data['images'] = image_data
         return data

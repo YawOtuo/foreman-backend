@@ -1,7 +1,9 @@
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Min
 
 from core.models.category import Category
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 
 class ProductManager(models.Manager):
     def search(self, **kwargs):
@@ -49,6 +51,8 @@ class Product(models.Model):
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="products"
     )
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
     availability = models.CharField(
         max_length=50, 
         choices=AVAILABILITY_CHOICES, 
@@ -66,6 +70,11 @@ class Product(models.Model):
 
     objects = ProductManager()
 
+    def update_price(self):
+        lowest_price = self.variants.aggregate(Min('price'))['price__min']
+        self.price = lowest_price
+        self.save()
+
     def __str__(self):
         return self.name
 
@@ -74,3 +83,10 @@ class Product(models.Model):
         for variant in self.variants.all():
             all_images.extend(variant.images.all())
         return all_images
+
+
+# Signals to update the product price whenever a variant is saved or deleted
+@receiver(post_save, sender="core.ProductVariant")
+@receiver(post_delete, sender="core.ProductVariant")
+def update_product_price(sender, instance, **kwargs):
+    instance.product.update_price()
