@@ -10,7 +10,7 @@ from core.models.user import User
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from core.serializers.order import OrderSerializer
+from core.serializers.order import OrderDetailSerializer, OrderListSerializer
 
 
 class OrderListAPI(APIView):
@@ -21,7 +21,7 @@ class OrderListAPI(APIView):
     @swagger_auto_schema(
         responses={
             200: openapi.Response(
-                description="List of orders", schema=OrderSerializer(many=True)
+                description="List of orders", schema=OrderListSerializer(many=True)
             ),
             404: "Orders not found",
         }
@@ -41,7 +41,7 @@ class OrderListAPI(APIView):
                 [], status=status.HTTP_200_OK
             )
 
-        serializer = OrderSerializer(orders, many=True)
+        serializer = OrderListSerializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -80,7 +80,7 @@ class OrderListAPI(APIView):
             required=["total_order_cost", "total_order_quantity", "order_items"],
         ),
         responses={
-            201: openapi.Response(description="Order created", schema=OrderSerializer),
+            201: openapi.Response(description="Order created", schema=OrderListSerializer),
             400: "Bad Request",
         },
     )
@@ -137,7 +137,7 @@ class OrderListAPI(APIView):
             order_items.append(order_item)
 
         # Serialize the order and return the response
-        serializer = OrderSerializer(order)
+        serializer = OrderListSerializer(order)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -148,7 +148,7 @@ class OrderDetailAPI(APIView):
 
     @swagger_auto_schema(
         responses={
-            200: openapi.Response(description="Order details", schema=OrderSerializer),
+            200: openapi.Response(description="Order details", schema=OrderDetailSerializer),
             404: "Order not found",
         }
     )
@@ -159,7 +159,7 @@ class OrderDetailAPI(APIView):
         user = get_object_or_404(User, id=user_id)
 
         order = get_object_or_404(Order, id=order_id, user=user)
-        serializer = OrderSerializer(order)
+        serializer = OrderDetailSerializer(order)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     @swagger_auto_schema(
@@ -173,7 +173,7 @@ class OrderDetailAPI(APIView):
             required=["is_paid"],
         ),
         responses={
-            200: openapi.Response(description="Order updated", schema=OrderSerializer),
+            200: openapi.Response(description="Order updated", schema=OrderDetailSerializer),
             400: "Bad Request",
             404: "Order not found",
         },
@@ -185,7 +185,7 @@ class OrderDetailAPI(APIView):
         user = get_object_or_404(User, id=user_id)
 
         order = get_object_or_404(Order, id=order_id, user=user)
-        serializer = OrderSerializer(order, data=request.data, partial=True)
+        serializer = OrderDetailSerializer(order, data=request.data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
