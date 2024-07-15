@@ -30,6 +30,7 @@ urlpatterns = [
     path("api/categories/", include("core.urls.categories")),
     path("api/emails/", include("core.urls.email")),
     path("api/orders/", include("core.urls.order")),
+    path("api/dashboard/", include("core.urls.dashboard")),
     path("", views.home),
     re_path(
         r"^swagger/$",

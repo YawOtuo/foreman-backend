@@ -26,3 +26,25 @@ class ProductSerializer(serializers.ModelSerializer):
         image_data = ProductImageSerializer(all_images, many=True).data
         data['images'] = image_data
         return data
+    
+
+class ProductListSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
+
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'description','price', 'category', 'availability']
+        extra_kwargs = {
+            'name': {'required': True},
+            # Add other required fields if needed
+        }
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        
+        # Fetch all images associated with variants and add to representation
+        all_images = instance.get_all_images()
+    
+        image_data = ProductImageSerializer(all_images, many=True).data
+        data['images'] = image_data
+        return data

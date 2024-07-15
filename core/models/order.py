@@ -5,6 +5,8 @@ from core.models.product import Product
 from core.models.shippingaddress import ShippingAddress
 from core.models.user import User
 
+from django.db.models import Sum
+
 class Order(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -25,6 +27,18 @@ class Order(models.Model):
     confirmed_at = models.DateTimeField(null=True, blank=True)
     shipped_at = models.DateTimeField(null=True, blank=True)
     delivered_at = models.DateTimeField(null=True, blank=True)
+
+    @property
+    def total_cost_spent(self):
+        return self.objects.aggregate(Sum('total_cost'))['total_cost__sum'] or 0
+
+    @classmethod
+    def total_orders(cls):
+        return cls.objects.count()
+
+    @classmethod
+    def total_completed_orders(cls):
+        return cls.objects.filter(status='delivered').count()
     def __str__(self):
         return f"Order {self.id} by {self.user.username}"
 

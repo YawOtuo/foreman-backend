@@ -4,7 +4,7 @@ from rest_framework import status
 from core.models.product import Product
 from django.http import Http404
 from drf_yasg.utils import swagger_auto_schema
-from core.serializers.product import ProductSerializer
+from core.serializers.product import ProductListSerializer, ProductSerializer
 
 
 class ProductList(APIView):
@@ -32,12 +32,12 @@ class ProductList(APIView):
             search_params["ordering"] = ordering
 
         products = Product.objects.search(**search_params)
-        serializer = ProductSerializer(products, many=True)
+        serializer = ProductListSerializer(products, many=True)
         return Response(serializer.data)
 
     @swagger_auto_schema(request_body=ProductSerializer)
     def post(self, request):
-        serializer = ProductSerializer(data=request.data)
+        serializer = ProductListSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
