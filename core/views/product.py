@@ -5,6 +5,7 @@ from core.models.product import Product
 from django.http import Http404
 from drf_yasg.utils import swagger_auto_schema
 from core.serializers.product import ProductListSerializer, ProductSerializer
+from django.db.models import Count, Sum
 
 
 class ProductList(APIView):
@@ -31,7 +32,12 @@ class ProductList(APIView):
         if ordering:
             search_params["ordering"] = ordering
 
-        products = Product.objects.search(**search_params)
+        # products = Product.objects.search(**search_params)
+
+         #Aggregate order counts for each product
+        products = Product.objects.search(**search_params).annotate(
+            total_orders=Count('orderitem', distinct=True)
+        ).order_by('-total_orders')  # Sort by most orders
         serializer = ProductListSerializer(products, many=True)
         return Response(serializer.data)
 
