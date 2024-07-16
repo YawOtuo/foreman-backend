@@ -65,7 +65,7 @@ class OrderItem(models.Model):
     total_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # Total cost of this item
 
     def __str__(self):
-        return f"{self.quantity} of {self.product.name}"
+        return f"{self.quantity} of {self.product_variant.name}"
 
     # def save(self, *args, **kwargs):
     #     self.total_cost = self.product.price * self.quantity

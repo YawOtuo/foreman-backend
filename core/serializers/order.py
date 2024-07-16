@@ -1,16 +1,40 @@
 
     
 from core.models.order import OrderItem, Order
+from core.models.productvariant import ProductVariant
 from core.serializers.product import ProductSerializer
 from rest_framework import serializers
 
+from core.serializers.productimage import ProductImageSerializer
+from core.serializers.productvariant import ProductVariantSerializer
 from core.serializers.shippingaddress import ShippingAddressSerializer
 
 
+class OrderDetailProductVariantSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ProductVariant
+        fields = [
+            "id",
+            "sku",
+            "name",
+            "images",
+            "brief_description",
+            "detailed_description",
+            "size",
+            "length",
+            "width",
+            "price",
+            "availability",
+            "created_at",
+            "updated_at",
+            "product",
+        ]
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(read_only=True)
+    product_variant = OrderDetailProductVariantSerializer(read_only=True)
 
     class Meta:
         model = OrderItem
