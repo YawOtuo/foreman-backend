@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone  # Add this import
 
 from core.models.product import Product
+from core.models.productvariant import ProductVariant
 from core.models.shippingaddress import ShippingAddress
 from core.models.user import User
 
@@ -59,7 +60,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     total_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # Total cost of this item
 

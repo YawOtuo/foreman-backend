@@ -2,12 +2,13 @@ from django.db import models
 
 from core.models.cart import Cart
 from core.models.product import Product
+from core.models.productvariant import ProductVariant
 
 
 class CartItem(models.Model):
     id = models.AutoField(primary_key=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
     added_at = models.DateTimeField(auto_now_add=True)
 

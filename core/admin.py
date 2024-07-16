@@ -38,7 +38,7 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ['username', 'email']
 
 class OrderItemInline(admin.TabularInline):
-    readonly_fields = ['product', 'quantity', 'total_cost']
+    readonly_fields = ['product_variant', 'quantity', 'total_cost']
     model = OrderItem
 
 

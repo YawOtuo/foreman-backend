@@ -37,9 +37,7 @@ class OrderListAPI(APIView):
         orders = Order.objects.filter(user=user)
 
         if not orders.exists():
-            return Response(
-                [], status=status.HTTP_200_OK
-            )
+            return Response([], status=status.HTTP_200_OK)
 
         serializer = OrderListSerializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -80,7 +78,9 @@ class OrderListAPI(APIView):
             required=["total_order_cost", "total_order_quantity", "order_items"],
         ),
         responses={
-            201: openapi.Response(description="Order created", schema=OrderListSerializer),
+            201: openapi.Response(
+                description="Order created", schema=OrderListSerializer
+            ),
             400: "Bad Request",
         },
     )
@@ -147,10 +147,13 @@ class OrderDetailAPI(APIView):
     """
 
     @swagger_auto_schema(
+        operation_id="GetOrderDetail",  # Custom operation ID
         responses={
-            200: openapi.Response(description="Order details", schema=OrderDetailSerializer),
+            200: openapi.Response(
+                description="Order details", schema=OrderDetailSerializer
+            ),
             404: "Order not found",
-        }
+        },
     )
     def get(self, request, order_id, user_id):
         """
@@ -173,7 +176,9 @@ class OrderDetailAPI(APIView):
             required=["is_paid"],
         ),
         responses={
-            200: openapi.Response(description="Order updated", schema=OrderDetailSerializer),
+            200: openapi.Response(
+                description="Order updated", schema=OrderDetailSerializer
+            ),
             400: "Bad Request",
             404: "Order not found",
         },
