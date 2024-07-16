@@ -60,7 +60,7 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
-    product_variant = models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
+    product_variant = models.ForeignKey(ProductVariant, related_name="orderitem",on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     total_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # Total cost of this item
 

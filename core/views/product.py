@@ -12,9 +12,9 @@ class ProductList(APIView):
     def get(self, request):
         search_params = {}
 
-        search_query = request.query_params.get('search')
+        search_query = request.query_params.get("search")
         if search_query:
-            search_params['search'] = search_query
+            search_params["search"] = search_query
 
         for field in [
             "name",
@@ -32,12 +32,15 @@ class ProductList(APIView):
         if ordering:
             search_params["ordering"] = ordering
 
-        # products = Product.objects.search(**search_params)
+        products = Product.objects.search(**search_params)
 
-         #Aggregate order counts for each product
-        products = Product.objects.search(**search_params).annotate(
-            total_orders=Count('orderitem', distinct=True)
-        ).order_by('-total_orders')  # Sort by most orders
+        # Aggregate order counts for each product
+        # products = (
+        #     Product.objects.search(**search_params)
+        #     .annotate(order_count=Count("variants__orderitem"))
+        #     .filter(**search_params)
+        #     .order_by("-order_count")
+        # )  # Sort by most orders
         serializer = ProductListSerializer(products, many=True)
         return Response(serializer.data)
 
