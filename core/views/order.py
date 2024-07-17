@@ -75,8 +75,41 @@ class OrderListAPI(APIView):
                         required=["product_id", "quantity", "totalCost"],
                     ),
                 ),
+                "shipping_address": openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        "address_line_1": openapi.Schema(
+                            type=openapi.TYPE_STRING, description="Address line 1"
+                        ),
+                        "address_line_2": openapi.Schema(
+                            type=openapi.TYPE_STRING,
+                            description="Address line 2",
+                            nullable=True,
+                        ),
+                        "city": openapi.Schema(
+                            type=openapi.TYPE_STRING, description="City"
+                        ),
+                        "state": openapi.Schema(
+                            type=openapi.TYPE_STRING, description="State", nullable=True
+                        ),
+                        "postal_code": openapi.Schema(
+                            type=openapi.TYPE_STRING,
+                            description="Postal code",
+                            nullable=True,
+                        ),
+                        "country": openapi.Schema(
+                            type=openapi.TYPE_STRING,
+                            description="Country",
+                            default="Ghana",
+                        ),
+                        "is_default": openapi.Schema(
+                            type=openapi.TYPE_BOOLEAN, description="Is default address"
+                        ),
+                    },
+                    required=["address_line_1", "city", "country"],
+                ),
             },
-            required=["total_order_cost", "total_order_quantity", "order_items"],
+            required=["total_order_cost", "total_order_quantity", "order_items", "shipping_address"],
         ),
         responses={
             201: openapi.Response(
@@ -85,7 +118,6 @@ class OrderListAPI(APIView):
             400: "Bad Request",
         },
     )
-
     def post(self, request, user_id):
         """
         Create a new order for the specified user.
@@ -96,7 +128,12 @@ class OrderListAPI(APIView):
         order_items_data = data.get("order_items")
         shipping_address_data = data.get("shipping_address")
 
-        if not total_order_cost or not total_order_quantity or not order_items_data or not shipping_address_data:
+        if (
+            not total_order_cost
+            or not total_order_quantity
+            or not order_items_data
+            or not shipping_address_data
+        ):
             return Response(
                 {"message": "Incomplete order data provided"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -128,7 +165,7 @@ class OrderListAPI(APIView):
             state=shipping_address_data.get("state"),
             postal_code=shipping_address_data.get("postal_code"),
             country=shipping_address_data.get("country", "Ghana"),
-            is_default=shipping_address_data.get("is_default", False)
+            is_default=shipping_address_data.get("is_default", False),
         )
 
         # Create the order
@@ -136,7 +173,7 @@ class OrderListAPI(APIView):
             user=user,
             total_cost=total_order_cost,
             total_quantity=total_order_quantity,
-            shipping_address=shipping_address
+            shipping_address=shipping_address,
         )
 
         order_items = []
@@ -148,7 +185,7 @@ class OrderListAPI(APIView):
             # Create OrderItem and link to order
             order_item = OrderItem.objects.create(
                 order=order,
-                product_id=product_id,
+                product_variant_id=product_id,
                 quantity=quantity,
                 total_cost=totalCost,
             )
@@ -157,6 +194,7 @@ class OrderListAPI(APIView):
         # Serialize the order and return the response
         serializer = OrderListSerializer(order)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class OrderDetailAPI(APIView):
     """

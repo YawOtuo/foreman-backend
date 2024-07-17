@@ -11,7 +11,7 @@ class RelatedProductSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = ["id", "name", "images", 'category', 'description', 'availability']
+        fields = ["id", "name", "images","price", 'category', 'description', 'availability']
 
     def get_images(self, obj):
         # Fetch all images associated with the related product
