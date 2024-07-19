@@ -21,3 +21,11 @@ class ProductVariant(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.sku})"
+    
+    @property
+    def min_order_quantity(self):
+        return self.product.category.min_order_quantity
+    
+    @property
+    def min_order_value(self):
+        return self.product.category.min_order_value

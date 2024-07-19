@@ -83,6 +83,14 @@ class Product(models.Model):
         for variant in self.variants.all():
             all_images.extend(variant.images.all())
         return all_images
+    
+    # @property
+    # def min_order_quantity(self):
+    #     return self.category.min_order_quantity
+
+    # @property
+    # def min_order_value(self):
+    #     return self.category.min_order_value
 
 
 # Signals to update the product price whenever a variant is saved or deleted
