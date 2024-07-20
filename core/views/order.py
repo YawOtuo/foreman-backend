@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 
 from core.models.order import Order, OrderItem
 from core.models.product import Product
+from core.models.productvariant import ProductVariant
 from core.models.shippingaddress import ShippingAddress
 from core.models.user import User
 from drf_yasg.utils import swagger_auto_schema
@@ -132,7 +133,7 @@ class OrderListAPI(APIView):
             not total_order_cost
             or not total_order_quantity
             or not order_items_data
-            or not shipping_address_data
+            # or not shipping_address_data
         ):
             return Response(
                 {"message": "Incomplete order data provided"},
@@ -145,35 +146,35 @@ class OrderListAPI(APIView):
         products_exist = True
         for item_data in order_items_data:
             product_id = item_data.get("product_id")
-            product = get_object_or_404(Product, id=product_id)
+            product = get_object_or_404(ProductVariant, id=product_id)
             if not product:
                 products_exist = False
                 break
 
         if not products_exist:
             return Response(
-                {"message": "One or more products do not exist"},
+                {"message": "One or more products variants do not exist"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         # Retrieve or create the shipping address
-        shipping_address, created = ShippingAddress.objects.get_or_create(
-            user=user,
-            address_line_1=shipping_address_data.get("address_line_1"),
-            address_line_2=shipping_address_data.get("address_line_2"),
-            city=shipping_address_data.get("city"),
-            state=shipping_address_data.get("state"),
-            postal_code=shipping_address_data.get("postal_code"),
-            country=shipping_address_data.get("country", "Ghana"),
-            is_default=shipping_address_data.get("is_default", False),
-        )
+        # shipping_address, created = ShippingAddress.objects.get_or_create(
+        #     user=user,
+        #     address_line_1=shipping_address_data.get("address_line_1"),
+        #     address_line_2=shipping_address_data.get("address_line_2"),
+        #     city=shipping_address_data.get("city"),
+        #     state=shipping_address_data.get("state"),
+        #     postal_code=shipping_address_data.get("postal_code"),
+        #     country=shipping_address_data.get("country", "Ghana"),
+        #     is_default=shipping_address_data.get("is_default", False),
+        # )
 
         # Create the order
         order = Order.objects.create(
             user=user,
             total_cost=total_order_cost,
             total_quantity=total_order_quantity,
-            shipping_address=shipping_address,
+            # shipping_address=shipping_address,
         )
 
         order_items = []
