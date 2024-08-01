@@ -15,6 +15,24 @@ from drf_yasg import openapi
 from core.serializers.order import OrderDetailSerializer, OrderListSerializer
 
 
+def validate_order_data(total_order_cost, total_order_quantity, order_items_data, shipping_address_data):
+    errors = []
+
+    if not total_order_cost:
+        errors.append("Total order cost is missing.")
+    if not total_order_quantity:
+        errors.append("Total order quantity is missing.")
+    if not order_items_data:
+        errors.append("Order items data is missing.")
+    if not shipping_address_data:
+        errors.append("Shipping address data is missing.")
+
+    if errors:
+        return Response(
+            {"message": "Incomplete order data provided", "errors": errors},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
 class OrderListAPI(APIView):
     """
     API view to handle listing and creating orders.
@@ -36,7 +54,7 @@ class OrderListAPI(APIView):
         user = get_object_or_404(User, id=user_id)
 
         # Filter orders by user
-        orders = Order.objects.filter(user=user).order_by('-created_at')
+        orders = Order.objects.filter(user=user).order_by("-created_at")
 
         if not orders.exists():
             return Response([], status=status.HTTP_200_OK)
@@ -72,36 +90,38 @@ class OrderListAPI(APIView):
                                 type=openapi.TYPE_NUMBER,
                                 description="Total cost of this item",
                             ),
+                            "unit_of_measurement": openapi.Schema(
+                                type=openapi.TYPE_NUMBER,
+                                description="Unit of measurement    ",
+                            ),
                         },
                         required=["product_id", "quantity", "totalCost"],
                     ),
                 ),
-                "shipping_details": openapi.Schema(
+                "shipping_address": openapi.Schema(
                     type=openapi.TYPE_OBJECT,
                     properties={
-                        "address_line_1": openapi.Schema(
-                            type=openapi.TYPE_STRING, description="Address line 1"
+                        "constituency": openapi.Schema(
+                            type=openapi.TYPE_STRING, description="Constituency"
                         ),
-                        "address_line_2": openapi.Schema(
+                        "area": openapi.Schema(
                             type=openapi.TYPE_STRING,
-                            description="Address line 2",
-                            nullable=True,
+                            description="area",
                         ),
-                        "city": openapi.Schema(
-                            type=openapi.TYPE_STRING, description="City"
+                        "location": openapi.Schema(
+                            type=openapi.TYPE_STRING, description="location"
                         ),
-                        "state": openapi.Schema(
-                            type=openapi.TYPE_STRING, description="State", nullable=True
+                        "recipient_name": openapi.Schema(
+                            type=openapi.TYPE_STRING, description="recipient_name", 
                         ),
-                        "postal_code": openapi.Schema(
+                        "recipient_phone": openapi.Schema(
                             type=openapi.TYPE_STRING,
-                            description="Postal code",
-                            nullable=True,
+                            description="recipient_phone",
+                           
                         ),
-                        "country": openapi.Schema(
+                        "nearest_landmark": openapi.Schema(
                             type=openapi.TYPE_STRING,
-                            description="Country",
-                            default="Ghana",
+                            description="nearest_landmark",
                         ),
                         "is_default": openapi.Schema(
                             type=openapi.TYPE_BOOLEAN, description="Is default address"
@@ -110,7 +130,12 @@ class OrderListAPI(APIView):
                     required=["address_line_1", "city", "country"],
                 ),
             },
-            required=["total_order_cost", "total_order_quantity", "order_items", "shipping_address"],
+            required=[
+                "total_order_cost",
+                "total_order_quantity",
+                "order_items",
+                "shipping_address",
+            ],
         ),
         responses={
             201: openapi.Response(
@@ -129,16 +154,9 @@ class OrderListAPI(APIView):
         order_items_data = data.get("order_items")
         shipping_address_data = data.get("shipping_address")
 
-        if (
-            not total_order_cost
-            or not total_order_quantity
-            or not order_items_data
-            or not shipping_address_data
-        ):
-            return Response(
-                {"message": "Incomplete order data provided"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        response = validate_order_data(total_order_cost, total_order_quantity, order_items_data, shipping_address_data)
+        if response:
+            return response
 
         user = get_object_or_404(User, id=user_id)
 
@@ -182,6 +200,7 @@ class OrderListAPI(APIView):
             product_id = item_data.get("product_id")
             quantity = item_data.get("quantity")
             totalCost = item_data.get("totalCost")
+            unit_of_measurement = item_data.get("unit_of_measurement")
 
             # Create OrderItem and link to order
             order_item = OrderItem.objects.create(
@@ -189,6 +208,7 @@ class OrderListAPI(APIView):
                 product_variant_id=product_id,
                 quantity=quantity,
                 total_cost=totalCost,
+                unit_of_measurement_id=unit_of_measurement,
             )
             order_items.append(order_item)
 

@@ -8,6 +8,7 @@ from rest_framework import serializers
 from core.serializers.productimage import ProductImageSerializer
 from core.serializers.productvariant import ProductVariantSerializer
 from core.serializers.shippingaddress import ShippingAddressSerializer
+from core.serializers.unit_of_measurement import UnitOfMeasurementSerializer
 
 
 class OrderDetailProductVariantSerializer(serializers.ModelSerializer):
@@ -35,7 +36,7 @@ class OrderDetailProductVariantSerializer(serializers.ModelSerializer):
 
 class OrderItemSerializer(serializers.ModelSerializer):
     product_variant = OrderDetailProductVariantSerializer(read_only=True)
-
+    unit_of_measurement = UnitOfMeasurementSerializer()
     class Meta:
         model = OrderItem
         fields = '__all__'

@@ -4,4 +4,4 @@ from core.models.unit_of_measurement import UnitOfMeasurement
 class UnitOfMeasurementSerializer(serializers.ModelSerializer):
     class Meta:
         model = UnitOfMeasurement
-        fields = ['unit', 'description']
+        fields = ['id','unit', 'description']

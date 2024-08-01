@@ -4,6 +4,7 @@ from django.utils import timezone  # Add this import
 from core.models.product import Product
 from core.models.productvariant import ProductVariant
 from core.models.shippingaddress import ShippingAddress
+from core.models.unit_of_measurement import UnitOfMeasurement
 from core.models.user import User
 
 from django.db.models import Sum
@@ -63,7 +64,7 @@ class OrderItem(models.Model):
     product_variant = models.ForeignKey(ProductVariant, related_name="orderitem",on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     total_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # Total cost of this item
-
+    unit_of_measurement = models.ForeignKey(UnitOfMeasurement, on_delete=models.SET_NULL, null=True, blank=True)
     def __str__(self):
         return f"{self.quantity} of {self.product_variant.name}"
 
