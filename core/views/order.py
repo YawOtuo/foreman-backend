@@ -36,7 +36,7 @@ class OrderListAPI(APIView):
         user = get_object_or_404(User, id=user_id)
 
         # Filter orders by user
-        orders = Order.objects.filter(user=user)
+        orders = Order.objects.filter(user=user).order_by('-created_at')
 
         if not orders.exists():
             return Response([], status=status.HTTP_200_OK)
@@ -76,7 +76,7 @@ class OrderListAPI(APIView):
                         required=["product_id", "quantity", "totalCost"],
                     ),
                 ),
-                "shipping_address": openapi.Schema(
+                "shipping_details": openapi.Schema(
                     type=openapi.TYPE_OBJECT,
                     properties={
                         "address_line_1": openapi.Schema(
@@ -133,7 +133,7 @@ class OrderListAPI(APIView):
             not total_order_cost
             or not total_order_quantity
             or not order_items_data
-            # or not shipping_address_data
+            or not shipping_address_data
         ):
             return Response(
                 {"message": "Incomplete order data provided"},
@@ -158,23 +158,23 @@ class OrderListAPI(APIView):
             )
 
         # Retrieve or create the shipping address
-        # shipping_address, created = ShippingAddress.objects.get_or_create(
-        #     user=user,
-        #     address_line_1=shipping_address_data.get("address_line_1"),
-        #     address_line_2=shipping_address_data.get("address_line_2"),
-        #     city=shipping_address_data.get("city"),
-        #     state=shipping_address_data.get("state"),
-        #     postal_code=shipping_address_data.get("postal_code"),
-        #     country=shipping_address_data.get("country", "Ghana"),
-        #     is_default=shipping_address_data.get("is_default", False),
-        # )
+        shipping_address, created = ShippingAddress.objects.get_or_create(
+            user=user,
+            constituency=shipping_address_data.get("constituency"),
+            area=shipping_address_data.get("area"),
+            location=shipping_address_data.get("location"),
+            recipient_name=shipping_address_data.get("recipient_name"),
+            recipient_phone=shipping_address_data.get("recipient_phone"),
+            nearest_landmark=shipping_address_data.get("nearest_landmark"),
+            is_default=shipping_address_data.get("is_default", False),
+        )
 
         # Create the order
         order = Order.objects.create(
             user=user,
             total_cost=total_order_cost,
             total_quantity=total_order_quantity,
-            # shipping_address=shipping_address,
+            shipping_address=shipping_address,
         )
 
         order_items = []

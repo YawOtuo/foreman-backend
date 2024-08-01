@@ -4,12 +4,12 @@ from django.db import models
 
 class ShippingAddress(models.Model):
     user = models.ForeignKey("core.User", on_delete=models.CASCADE, related_name='shipping_addresses')
-    address_line_1 = models.CharField(max_length=255)
-    address_line_2 = models.CharField(max_length=255, blank=True, null=True)
-    city = models.CharField(max_length=255)
-    state = models.CharField(max_length=255, null=True, blank=True)
-    postal_code = models.CharField(max_length=20, null=True,blank=True)
-    country = models.CharField(max_length=255, default="Ghana")
+    constituency = models.CharField(max_length=255)
+    area = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
+    recipient_name = models.CharField(max_length=255)
+    recipient_phone = models.CharField(max_length=20)
+    nearest_landmark = models.CharField(max_length=255, null=True, blank=True)
     is_default = models.BooleanField(default=False)
 
     def __str__(self):
