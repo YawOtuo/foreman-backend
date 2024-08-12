@@ -1,7 +1,6 @@
 from django.db import models
 
 from core.models.cart import Cart
-from core.models.product import Product
 from core.models.productvariant import ProductVariant
 
 

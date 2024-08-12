@@ -1,6 +1,7 @@
 from core.models.product import Product
 from rest_framework import serializers
 
+from core.serializers.product_variant_price import ProductVariantPriceSerializer
 from core.serializers.productvariant import ProductVariantSerializer
 from .category import CategorySerializer
 from .productimage import (
@@ -13,7 +14,6 @@ class ProductSerializer(serializers.ModelSerializer):
     variants = ProductVariantSerializer(
         many=True, read_only=True
     )  # Assuming ProductVariantSerializer exists
-
     class Meta:
         model = Product
         fields = [

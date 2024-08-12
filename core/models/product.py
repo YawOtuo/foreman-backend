@@ -5,15 +5,20 @@ from core.models.category import Category
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
+from core.models.productvariantprice import ProductVariantPrice
+
+
 class ProductManager(models.Manager):
     def search(self, **kwargs):
         queryset = self.get_queryset()
-        search_query = kwargs.pop('search', None)
+        search_query = kwargs.pop("search", None)
         query_objects = Q()
 
         # Apply initial search_query filter for name or category__name
         if search_query:
-            query_objects = Q(name__icontains=search_query) | Q(category__name__icontains=search_query)
+            query_objects = Q(name__icontains=search_query) | Q(
+                category__name__icontains=search_query
+            )
 
         ordering_fields = None
 
@@ -39,11 +44,10 @@ class ProductManager(models.Manager):
 
 class Product(models.Model):
 
-    
     AVAILABILITY_CHOICES = [
-        ("available", 'Available'),
-        ("unavailable", 'Unavailable'),
-        ("pending", 'Pending'),
+        ("available", "Available"),
+        ("unavailable", "Unavailable"),
+        ("pending", "Pending"),
     ]
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, null=False)
@@ -54,10 +58,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     availability = models.CharField(
-        max_length=50, 
-        choices=AVAILABILITY_CHOICES, 
-        default="available",
-        blank=True
+        max_length=50, choices=AVAILABILITY_CHOICES, default="available", blank=True
     )
 
     min_order_quantity = models.IntegerField(blank=True, null=True)
@@ -71,8 +72,17 @@ class Product(models.Model):
     objects = ProductManager()
 
     def update_price(self):
-        lowest_price = self.variants.aggregate(Min('price'))['price__min']
-        self.price = lowest_price
+        # Aggregate the minimum price across all related product variants and their prices
+        lowest_price = ProductVariantPrice.objects.filter(
+            product_variant__product=self
+        ).aggregate(Min("price"))["price__min"]
+
+        # Update the product price if a price is found
+        if lowest_price is not None:
+            self.price = lowest_price
+        else:
+            self.price = None  # Set to None if no prices are found
+
         self.save()
 
     def __str__(self):
@@ -83,7 +93,7 @@ class Product(models.Model):
         for variant in self.variants.all():
             all_images.extend(variant.images.all())
         return all_images
-    
+
     # @property
     # def min_order_quantity(self):
     #     return self.category.min_order_quantity
