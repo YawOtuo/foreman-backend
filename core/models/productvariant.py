@@ -4,7 +4,7 @@ from django.db import models
 
 class ProductVariant(models.Model):
     product = models.ForeignKey("core.Product", on_delete=models.CASCADE, related_name="variants")
-    sku = models.CharField(max_length=100, unique=True, null=False)
+    sku = models.CharField(max_length=100, unique=True, null=True)
     name = models.CharField(max_length=255, null=False)
     brief_description = models.CharField(max_length=255, blank=True, null=True)
     detailed_description = models.TextField(blank=True, null=True)
