@@ -26,7 +26,6 @@ class OrderDetailProductVariantSerializer(serializers.ModelSerializer):
             "size",
             "length",
             "width",
-            "price",
             "availability",
             "created_at",
             "updated_at",
