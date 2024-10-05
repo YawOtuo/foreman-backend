@@ -1,6 +1,6 @@
 import os
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from sendgrid.helpers.mail import Mail, From
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
@@ -14,13 +14,31 @@ def send_general_email(request):
     try:
         data = request.data
         to_email = data.get("to")
-        from_email = data.get("from")
+        from_data = data.get("from")  # Expecting from to be an object with email and optionally name
         template_id = data.get("templateId")
         dynamic_template_data = data.get("dynamicTemplateData")
-        message = Mail(
-            from_email=from_email,
-            to_emails=to_email,
-        )
+
+        # Validate 'from' object
+        from_email = from_data.get("email")
+        from_name = from_data.get("name", None)  # 'name' is optional now
+
+        if not from_email:
+            return Response(
+                {"error": "'from' field must include an 'email'."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Create Mail object with 'from_email' and optionally 'from_name'
+        if from_name:
+            message = Mail(
+                from_email=From(email=from_email, name=from_name),
+                to_emails=to_email,
+            )
+        else:
+            message = Mail(
+                from_email=from_email,
+                to_emails=to_email,
+            )
 
         message.dynamic_template_data = dynamic_template_data
         message.template_id = template_id
@@ -35,7 +53,6 @@ def send_general_email(request):
 
         sg = SendGridAPIClient(sendgrid_api_key)
         response = sg.send(message)
-
 
         return Response(
             {"message": "Email sent successfully", "status_code": response.status_code},
