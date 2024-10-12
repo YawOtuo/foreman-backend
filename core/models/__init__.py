@@ -6,3 +6,6 @@ from .favourite import Favourite
 from .category import Category
 from .productvariant import ProductVariant
 from .productimage import ProductImage
+from .location import  Area
+from .location import Constituency
+from .delivery_fees import DeliveryFee

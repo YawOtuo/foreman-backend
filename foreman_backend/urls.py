@@ -32,6 +32,9 @@ urlpatterns = [
     path("api/orders/", include("core.urls.order")),
     path("api/dashboard/", include("core.urls.dashboard")),
     path("", views.home),
+    path("api/locations/", include("core.urls.locations")),
+    path("api/delivery-fees/", include("core.urls.deliveryfees")),
+
     re_path(
         r"^swagger/$",
         schema_view.with_ui("swagger", cache_timeout=0),

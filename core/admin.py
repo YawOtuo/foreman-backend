@@ -3,6 +3,7 @@
 from django import forms
 from django.contrib import admin
 from core.models.category import Category
+from core.models.delivery_fees import DeliveryFee
 from core.models.order import Order, OrderItem
 from core.models.product import Product
 from core.models.productimage import ProductImage
@@ -46,6 +47,7 @@ class OrderAdmin(admin.ModelAdmin):
     # readonly_fields = ['user', 'created_at', 'updated_at', 'is_paid', 'total_cost', 'total_quantity', 'shipping_address', 'status', 'confirmed_at', 'shipped_at', 'delivered_at']
     inlines = [OrderItemInline]
     search_fields = ['user__username', 'status']
+
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductVariant, ProductVariantAdmin)
