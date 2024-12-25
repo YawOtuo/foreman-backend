@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'uid', 'cart_id', 'shipping_addresses']
+        fields = ['id', 'username', 'email', 'uid', 'cart_id', 'shipping_addresses', 'image_url']
 
     def get_cart_id(self, obj):
         cart = Cart.objects.filter(user=obj).first()

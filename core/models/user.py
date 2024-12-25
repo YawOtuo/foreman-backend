@@ -12,6 +12,7 @@ class User(models.Model):
     username = models.CharField(max_length=250)
     email = models.EmailField(unique=True)
     uid = models.CharField(unique=True, null=True, max_length=100)
+    image_url = models.CharField(max_length=250, null=True, blank=True)
     # Add other fields as needed
 
     def __str__(self):
